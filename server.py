@@ -69,12 +69,20 @@ def healthcheck():
 def bless():
     if request.is_json:
         data = request.get_json()
+
+        if not data.get('kmsauth_token', False):
+            return "Unauthorized", 401
+
         output = lambda_handler(
             data,
             context=Context,
             entropy_check=ENTROPY_CHECK,
             config_file=ensure_config()
         )
+
+        if data.get('errorType', False):
+            return "Bad request", 400
+
         return json.dumps(output)
     else:
         return "Bad Request", 400
