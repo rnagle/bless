@@ -60,6 +60,11 @@ def ensure_config():
     return config_file
 
 
+@app.route("/_healthcheck", methods=['GET'])
+def healthcheck():
+    return "ok", 200
+
+
 @app.route("/bless", methods=['POST'])
 def bless():
     if request.is_json:
